@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HowardTest</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <button onclick="getLocation()">Get GPS!!!</button>
+    <p id="demo"></p>
+    {% comment %} <table>
+        <thead>
+            <th>Account</th>
+            <th>Name</th>
+        </thead>
+        <tbody>
+            {% for item in Accounts %}
+            <tr>
+                <td>{{item.account}}</td>
+                <td>{{item.name}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table> {% endcomment %}
+    <script>
+        var x = document.getElementById("demo");
+        {% comment %} var userlat = {{}}
+        var userlon = {{}} {% endcomment %}
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+            x.innerHTML = "Latitude: " + position.coords.latitude +
+                "<br>Longitude: " + position.coords.longitude;
+            var location = [position.coords.longitude, position.coords.latitude]
+            alert('aaaa')
+            $(document).ready(function() {
+                $.ajax({
+                    method: 'POST',
+                    url: '../views.py',
+                    data: {'userlocation': location},
+                success: function (data) {
+                    //this gets called when server returns an OK response
+                    alert("it worked!");
+                },
+                error: function (data) {
+                    alert("it didnt work");
+                }
+                }
+            );
+        }
+});
+    </script>
+
+</body>
+
+</html>

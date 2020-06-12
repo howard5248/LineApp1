@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simenvi打卡系統</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+  <script src="/static/sign/liff_punchin.js"></script>
+
+<!-- CSS only -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <link rel="stylesheet" href="/static/punch_work/main.css">
+</head>
+
+
+
+<body>
+    <div class="container" id='Puncharea'>
+      <div class="welcome">
+        <h1 id="username"></h1><h1>，您好 請進行以下操作</h1>
+      </div>
+      <div class="but1">
+      <button class='punch' onclick="getInfo(); getLocation(); getProfile('1')">上班打卡</button>
+      <button class='punch' onclick="getInfo(); getLocation(); getProfile('4')">下班打卡</button>
+      </div>
+      <div class="but2">
+      <button class='punch' onclick="getInfo(); getLocation(); getProfile('3')">私事離開打卡</button>
+      <button class='punch' onclick="getInfo(); getLocation(); getProfile('2')">私事上班打卡</button>
+      </div>
+      <p id="demo"></p>
+      <p>{{ rlt }}</p>
+    </div>
+    <div class="buttonGroup">
+      <p>本系統需登入Line帳號才可使用</p>
+      <p>登入登出請按下方按鈕</p>
+      <button id="liffLoginButton">Log in</button>
+      <button id="liffLogoutButton">Log out</button>
+    </div>
+
+  <script>
+        let dataJSON = {};
+        var x = document.getElementById("demo");
+        var requestURL = "postLocation";
+        var token = '{{csrf_token}}';
+
+        function getInfo(){
+          $.ajax({
+            async: false,
+            type: 'GET',
+            url: 'https://www.cloudflare.com/cdn-cgi/trace',
+            success: function(data) {
+                //data = data.split("\n").slice(0,-1)
+                //var info = {}; // better to define using [] instead of new Array();
+                //for (var i = 0; i < data.length; i++) {
+                //    var split = data[i].split("=");  // just split once
+                //    info[split[0]] = split[1]
+                //}
+                dataJSON["info"] = data;
+              }
+          });
+        }
+
+        function getProfile(num) {
+        if (!liff.isLoggedIn()) {
+            // set `redirectUri` to redirect the user to a URL other than the front page of your LIFF app.
+            liff.login();
+        }
+        liff.getProfile().then(function(profile){
+            var liffuserID = profile.userId;
+            var liffName = profile.displayName;
+            var liffPic = profile.pictureUrl;
+            dataJSON['liffID'] = profile.userId;
+            dataJSON['liffname'] = profile.userId;
+            dataJSON['liffPic'] = profile.userId;
+            dataJSON['liffOs'] = liff.getOS();
+            }).then(function(){
+            console.log(dataJSON)
+
+            dataJSON['status'] = num;
+
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                url: requestURL,
+                data: JSON.stringify(dataJSON),
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                dataType: "json",
+                success: function(returnData){
+                    console.log(returnData);
+                    x.innerHTML = returnData['str']
+                },
+                error: function(xhr, ajaxOptions, thrownError){
+                    console.log(xhr.status);
+                    console.log(thrownError);
+                }
+            });
+
+        })
+
+        };
+
+        function getLocation(num) {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(postPosition);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function postPosition(position) {
+          dataJSON["lon"] = position.coords.longitude;
+          dataJSON["lat"] = position.coords.latitude;
+          // {% comment %} x.innerHTML = "Latitude: " + dataJSON['lat'] +
+          //       "<br>Longitude: " + dataJSON['lon']; {% endcomment %}
+        }      
+        
+  </script>
+
+</body>
+
+</html>
+

@@ -1,0 +1,24 @@
+body {
+    /* background-color: darkblue; */
+    background: -webkit-linear-gradient(left top,yellow,red);
+    background: -o-linear-gradient(bottom right,yellow,red);
+    background: -moz-linear-gradient(bottom right,yellow,red);
+    background: linear-gradient(to bottom right,yellow,red);
+    /* background-repeat: no-repeat;
+    font-family: Arial, Helvetica, sans-serif;
+    /* color: black; */
+  }
+  h1 {
+    display: inline;
+  }
+  button.punch{
+    font-size: 1.2rem;
+  }
+
+  .buttonGroup{
+    margin-top: 6rem;
+  }
+
+  .but2{
+    margin-top: 2rem;
+  }
