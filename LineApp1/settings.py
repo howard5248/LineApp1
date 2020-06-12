@@ -19,8 +19,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'n!y=_%vw*0+o$01__#*@x0fvy_noqd3tht%10db@k4+b&i7$d1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -75,23 +73,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'LineApp1.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'Work2',
-            'USER': 'howard5248',
-            'PASSWORD': '94219109',
-            'HOST': '192.168.1.201',
-            'PORT': '3306'
-    }
-}
-
-
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -134,5 +115,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
-CHANNEL_ACCESS_TOKEN = 'SbrwaMwNb8OG7T5DhTsC+4LIwHxbspmOXqsfj4XSlBUb21sxgDnXO8+eMpq62CE5hjxAURc86mYsw/mXArVJOlp7Pv05FA5OsalVDx52E8zUdMhLT2VF25BTlA1wMjhMbajqsqWL5UuhzG6TfAUNcwdB04t89/1O/w1cDnyilFU='
-CHANNEL_SECRET = '52b7b3a50cc7180b8f5b74e502ca73c6'
+try:
+    from local_settings import *
+except ImportError:
+    pass
